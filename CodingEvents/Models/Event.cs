@@ -3,11 +3,18 @@ namespace CodingEvents.Models
 {
 	public class Event
 	{
-		public string Name { get; set; }
-		public string Description { get; set; }
+		public string? Name { get; set; }
+		public string? Description { get; set; }
+		public string? ContactEmail { get; set; }
 
 		public int Id {get; set;}
 		static private int nextId = 1;
+
+		public Event()
+		{
+			Id = nextId;
+			nextId++; 
+		}
 
 		public Event(string name, string description)
 		{
@@ -17,7 +24,7 @@ namespace CodingEvents.Models
 			nextId++;
 		}
 
-        public override string ToString()
+        public override string? ToString()
         {
 			return Name;
         }
@@ -32,5 +39,5 @@ namespace CodingEvents.Models
 			return HashCode.Combine(Id);
 		}
     }
-}
+}  
 

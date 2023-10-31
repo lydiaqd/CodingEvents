@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using CodingEvents.Models;
 using CodingEvents.Data;
 using Microsoft.AspNetCore.Mvc;
+using CodingEvents.ViewModels;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -15,26 +16,39 @@ namespace CodingEvents.Controllers
 
         // GET: /<controller>/
         public IActionResult Index()
-        { 
-            ViewBag.events = EventData.GetAll();
+        {
+            List<Event> events = new List<Event>(EventData.GetAll());
 
-            return View();
+            return View(events);
         }
 
         [HttpGet]
         public IActionResult Add()
         {
-            return View();
+            AddEventViewModel addEventViewModel = new AddEventViewModel();
+
+            return View(addEventViewModel);
         }
 
         [HttpPost]
-        [Route("/Events/Add")]
-        public IActionResult NewEvent(string name, string description )
+        public IActionResult Add(AddEventViewModel addEventViewModel)
         {
-            EventData.Add(new Event(name, description));
+            if (ModelState.IsValid)
+            {
+                Event newEvent = new Event
 
-            return Redirect("/Events");
-        }
+                {
+                    Name = addEventViewModel.Name,
+                    Description = addEventViewModel.Description,
+                    ContactEmail = addEventViewModel.ContactEmail
+                };
+
+                EventData.Add(newEvent);
+
+                return Redirect("/Events");
+            }
+            return View(addEventViewModel);
+        } 
 
         public IActionResult Delete()
         {
